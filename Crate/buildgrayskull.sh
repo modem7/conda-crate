@@ -11,7 +11,8 @@ echo "### Setting user variables..."
 CONDAENV="grayskull" \
 PYTHONENV="3.10" \
 PYPIPKG="crate" \
-MAINTAINER="modem7"
+MAINTAINER="modem7" \
+BUILDDIR="/data/build_dir"
 
 # Create trap for SIGINT
 trap 'kill -TERM $PID' TERM INT
@@ -37,16 +38,23 @@ echo "### Activating environment..."
 source activate $CONDAENV
 echo ""
 
+# Creating Directories if they don't exist
+echo "### Creating directories..."
+mkdir -p $BUILDDIR && cd $BUILDDIR
+
 # Generating Grayskull package
 echo "### Generating Grayskull package..."
-cd /data && grayskull pypi --maintainers $MAINTAINER --strict-conda-forge $PYPIPKG && cd $PYPIPKG
+grayskull pypi --maintainers $MAINTAINER --strict-conda-forge $PYPIPKG && cd $PYPIPKG
 
 # Building Grayskull package
 echo "### Building Grayskull package..."
-conda mambabuild --python $PYTHONENV --output-folder . .
+PKGLOC=$(conda mambabuild --no-anaconda-upload --python $PYTHONENV --output --output-folder . . | tee /dev/console | grep \/data\/build_dir\/.*tar.bz2)
+
+# Setting permissions for built package
+chown -R $PUID:$PGID $BUILDDIR
 
 echo ""
-echo "### Built Grayskull package..."
+echo "### Built Grayskull package. Located in $PKGLOC..."
 echo "### Use upload script to upload to Anaconda..."
 echo ""
 date -ud "@$SECONDS" "+Time taken to run script: %H:%M:%S"
