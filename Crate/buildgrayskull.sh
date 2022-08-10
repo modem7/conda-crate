@@ -39,7 +39,7 @@ echo ""
 
 # Generating Grayskull package
 echo "### Generating Grayskull package..."
-grayskull pypi --maintainers modem7 --strict-conda-forge $PYPIPKG && cd $PYPIPKG
+cd /data && grayskull pypi --maintainers $MAINTAINER --strict-conda-forge $PYPIPKG && cd $PYPIPKG
 
 # Building Grayskull package
 echo "### Building Grayskull package..."
