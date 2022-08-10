@@ -2,10 +2,10 @@
 # https://github.com/repository-settings/app
 
 repository:
-  #name: NewRepo
-  description: Content to add by default to new repos
-  homepage: https://modem7.com
-  topics: default, repo, files
+  name: Conda-Grayskull
+  description: Repo for storing scripts for Grayskull builds
+  # homepage:
+  topics: conda, mamba, grayskull, python, pypi
 
   private: false
   has_issues: true
