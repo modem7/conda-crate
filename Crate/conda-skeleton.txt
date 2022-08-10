@@ -1,21 +1,9 @@
-docker run -it --name condabuild --rm -v "$(pwd)":/data 'condaforge/mambaforge-pypy3' bin/bash
+docker run -it --name grayskull --rm -v "$(pwd)":/data 'condaforge/mambaforge-pypy3' bin/bash
 
-CONDAENV="test" \
+CONDAENV="grayskull" \
 PYTHONENV="3.10" \
-PIPUPGRADE="pip setuptools wheel" \
-PIPREQS="/tmp/requirements.txt" \
-CONDARC="/opt/conda/.condarc" \
 PYPIPKG="crate" \
 CONDAUSER="modem7"
-
-cat > $CONDARC << EOF
-channels:
-  - conda-forge
-  - anaconda
-  - defaults
-pip_interop_enabled: True
-EOF
-
 
 cd /data && mamba create -y --name $CONDAENV anaconda-client conda-build conda-verify numpy boa grayskull python=$PYTHONENV && \
 mamba init bash && \
