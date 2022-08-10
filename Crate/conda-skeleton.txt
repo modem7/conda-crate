@@ -1,0 +1,32 @@
+docker run -it --name condabuild --rm -v "$(pwd)":/data 'condaforge/mambaforge-pypy3' bin/bash
+
+CONDAENV="test" \
+PYTHONENV="3.10" \
+PIPUPGRADE="pip setuptools wheel" \
+PIPREQS="/tmp/requirements.txt" \
+CONDARC="/opt/conda/.condarc" \
+PYPIPKG="crate" \
+CONDAUSER="modem7"
+
+cat > $CONDARC << EOF
+channels:
+  - conda-forge
+  - anaconda
+  - defaults
+pip_interop_enabled: True
+EOF
+
+
+cd /data && mamba create -y --name $CONDAENV anaconda-client conda-build conda-verify numpy boa grayskull python=$PYTHONENV && \
+mamba init bash && \
+source ~/.bashrc && \
+source activate $CONDAENV
+
+grayskull pypi --maintainers modem7 --strict-conda-forge --list-missing-deps crate && cd $PYPIPKG
+
+conda mambabuild --python $PYTHONENV --output-folder . .
+
+
+anaconda upload --user $CONDAUSER noarch/crate-0.27.1-py_0.tar.bz2
+
+conda-convert -p linux-32 linux-64 linux-64/*.tar.bz2 -o .
