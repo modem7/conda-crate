@@ -8,7 +8,7 @@ jobs:
     name: Conda skeleton publish
     steps:
       - name: 'Publish conda package from PyPI package'
-        uses: actions/conda-skeleton-publish@v1
+        uses: teamholtz/conda-skeleton-publish@v1
         with:
           pypi_package: "crate"
           python_version: "3.10"
