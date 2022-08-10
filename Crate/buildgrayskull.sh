@@ -51,7 +51,7 @@ echo "### Building Grayskull package..."
 PKGLOC=$(conda mambabuild --no-anaconda-upload --python $PYTHONENV --output --output-folder . . | tee /dev/console | grep \/data\/build_dir\/.*tar.bz2)
 
 # Setting permissions for built package
-chown -R $PUID:$PGID $BUILDDIR
+chown -R $PUID:$PGID $BUILDDIR/*
 
 echo ""
 echo "### Built Grayskull package. Located in $PKGLOC..."
