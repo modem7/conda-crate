@@ -1,3 +1,5 @@
+name: Publish conda package
+
 on: workflow_dispatch
 
 jobs:
@@ -5,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Conda skeleton publish
     steps:
-      - name: Publish conda package from PyPI package
+      - name: 'Publish conda package from PyPI package'
         uses: actions/conda-skeleton-publish@v1
         with:
           pypi_package: "crate"
