@@ -1,0 +1,34 @@
+docker run -it --name grayskull --rm -v "$(pwd)":/data 'condaforge/mambaforge-pypy3' bin/bash
+
+CONDAENV="grayskull" \
+PYTHONENV="3.8" \
+PYPIPKG="tflite" \
+CONDAUSER="modem7" \
+CONDARC="/opt/conda/.condarc"
+
+cat > $CONDARC << EOF
+channels:
+#  - conda-forge
+  - anaconda
+#  - intel
+  - defaults
+pip_interop_enabled: True
+#channel_priority: strict
+EOF
+
+mamba create --name $CONDAENV -y anaconda-client conda-build conda-verify numpy boa grayskull python=$PYTHONENV && \
+mamba init bash && \
+source ~/.bashrc && \
+source activate $CONDAENV
+
+cd /data && grayskull pypi --maintainers $CONDAUSER --recursive --list-missing-deps $PYPIPKG && cd $PYPIPKG
+
+conda mambabuild --python $PYTHONENV --output-folder . .
+
+
+
+
+
+anaconda upload --user $CONDAUSER noarch/crate-0.27.1-py_0.tar.bz2
+
+conda-convert -p linux-32 linux-64 linux-64/*.tar.bz2 -o .
